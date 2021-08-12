@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="RegistroModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Alumno">
+          <Key>
+            <PropertyRef Name="IdAlm" />
+          </Key>
+          <Property Name="IdAlm" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CodigoAlm" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="300" Nullable="false" />
+          <Property Name="Edad" Type="int" />
+          <Property Name="Genero" Type="varchar" MaxLength="100" />
+          <Property Name="IdGrado" Type="int" Nullable="false" />
+          <Property Name="Observacion" Type="varchar" MaxLength="300" />
+        </EntityType>
+        <EntityType Name="Grado">
+          <Key>
+            <PropertyRef Name="IdGrado" />
+          </Key>
+          <Property Name="IdGrado" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Materia">
+          <Key>
+            <PropertyRef Name="IdMateria" />
+          </Key>
+          <Property Name="IdMateria" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="MateriasxGrado">
+          <Key>
+            <PropertyRef Name="IdMxG" />
+          </Key>
+          <Property Name="IdMxG" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdGrado" Type="int" Nullable="false" />
+          <Property Name="IdMateria" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="fk_Grado">
+          <End Role="Grado" Type="Self.Grado" Multiplicity="1" />
+          <End Role="Alumno" Type="Self.Alumno" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grado">
+              <PropertyRef Name="IdGrado" />
+            </Principal>
+            <Dependent Role="Alumno">
+              <PropertyRef Name="IdGrado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_IdGrado">
+          <End Role="Grado" Type="Self.Grado" Multiplicity="1" />
+          <End Role="MateriasxGrado" Type="Self.MateriasxGrado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grado">
+              <PropertyRef Name="IdGrado" />
+            </Principal>
+            <Dependent Role="MateriasxGrado">
+              <PropertyRef Name="IdGrado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_IdMateria">
+          <End Role="Materia" Type="Self.Materia" Multiplicity="1" />
+          <End Role="MateriasxGrado" Type="Self.MateriasxGrado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Materia">
+              <PropertyRef Name="IdMateria" />
+            </Principal>
+            <Dependent Role="MateriasxGrado">
+              <PropertyRef Name="IdMateria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="RegistroModelStoreContainer">
+          <EntitySet Name="Alumno" EntityType="Self.Alumno" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Grado" EntityType="Self.Grado" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Materia" EntityType="Self.Materia" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MateriasxGrado" EntityType="Self.MateriasxGrado" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="fk_Grado" Association="Self.fk_Grado">
+            <End Role="Grado" EntitySet="Grado" />
+            <End Role="Alumno" EntitySet="Alumno" />
+          </AssociationSet>
+          <AssociationSet Name="fk_IdGrado" Association="Self.fk_IdGrado">
+            <End Role="Grado" EntitySet="Grado" />
+            <End Role="MateriasxGrado" EntitySet="MateriasxGrado" />
+          </AssociationSet>
+          <AssociationSet Name="fk_IdMateria" Association="Self.fk_IdMateria">
+            <End Role="Materia" EntitySet="Materia" />
+            <End Role="MateriasxGrado" EntitySet="MateriasxGrado" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="RegistroModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Alumno">
+          <Key>
+            <PropertyRef Name="IdAlm" />
+          </Key>
+          <Property Name="IdAlm" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CodigoAlm" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="300" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Edad" Type="Int32" />
+          <Property Name="Genero" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IdGrado" Type="Int32" Nullable="false" />
+          <Property Name="Observacion" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Grado" Relationship="Self.fk_Grado" FromRole="Alumno" ToRole="Grado" />
+        </EntityType>
+        <EntityType Name="Grado">
+          <Key>
+            <PropertyRef Name="IdGrado" />
+          </Key>
+          <Property Name="IdGrado" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Alumno" Relationship="Self.fk_Grado" FromRole="Grado" ToRole="Alumno" />
+          <NavigationProperty Name="MateriasxGrado" Relationship="Self.fk_IdGrado" FromRole="Grado" ToRole="MateriasxGrado" />
+        </EntityType>
+        <EntityType Name="Materia">
+          <Key>
+            <PropertyRef Name="IdMateria" />
+          </Key>
+          <Property Name="IdMateria" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="MateriasxGrado" Relationship="Self.fk_IdMateria" FromRole="Materia" ToRole="MateriasxGrado" />
+        </EntityType>
+        <EntityType Name="MateriasxGrado">
+          <Key>
+            <PropertyRef Name="IdMxG" />
+          </Key>
+          <Property Name="IdMxG" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdGrado" Type="Int32" Nullable="false" />
+          <Property Name="IdMateria" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Grado" Relationship="Self.fk_IdGrado" FromRole="MateriasxGrado" ToRole="Grado" />
+          <NavigationProperty Name="Materia" Relationship="Self.fk_IdMateria" FromRole="MateriasxGrado" ToRole="Materia" />
+        </EntityType>
+        <Association Name="fk_Grado">
+          <End Role="Grado" Type="Self.Grado" Multiplicity="1" />
+          <End Role="Alumno" Type="Self.Alumno" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grado">
+              <PropertyRef Name="IdGrado" />
+            </Principal>
+            <Dependent Role="Alumno">
+              <PropertyRef Name="IdGrado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_IdGrado">
+          <End Role="Grado" Type="Self.Grado" Multiplicity="1" />
+          <End Role="MateriasxGrado" Type="Self.MateriasxGrado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grado">
+              <PropertyRef Name="IdGrado" />
+            </Principal>
+            <Dependent Role="MateriasxGrado">
+              <PropertyRef Name="IdGrado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_IdMateria">
+          <End Role="Materia" Type="Self.Materia" Multiplicity="1" />
+          <End Role="MateriasxGrado" Type="Self.MateriasxGrado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Materia">
+              <PropertyRef Name="IdMateria" />
+            </Principal>
+            <Dependent Role="MateriasxGrado">
+              <PropertyRef Name="IdMateria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="RegistroEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Alumno" EntityType="Self.Alumno" />
+          <EntitySet Name="Grado" EntityType="Self.Grado" />
+          <EntitySet Name="Materia" EntityType="Self.Materia" />
+          <EntitySet Name="MateriasxGrado" EntityType="Self.MateriasxGrado" />
+          <AssociationSet Name="fk_Grado" Association="Self.fk_Grado">
+            <End Role="Grado" EntitySet="Grado" />
+            <End Role="Alumno" EntitySet="Alumno" />
+          </AssociationSet>
+          <AssociationSet Name="fk_IdGrado" Association="Self.fk_IdGrado">
+            <End Role="Grado" EntitySet="Grado" />
+            <End Role="MateriasxGrado" EntitySet="MateriasxGrado" />
+          </AssociationSet>
+          <AssociationSet Name="fk_IdMateria" Association="Self.fk_IdMateria">
+            <End Role="Materia" EntitySet="Materia" />
+            <End Role="MateriasxGrado" EntitySet="MateriasxGrado" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="RegistroModelStoreContainer" CdmEntityContainer="RegistroEntities">
+          <EntitySetMapping Name="Alumno">
+            <EntityTypeMapping TypeName="RegistroModel.Alumno">
+              <MappingFragment StoreEntitySet="Alumno">
+                <ScalarProperty Name="IdAlm" ColumnName="IdAlm" />
+                <ScalarProperty Name="CodigoAlm" ColumnName="CodigoAlm" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Edad" ColumnName="Edad" />
+                <ScalarProperty Name="Genero" ColumnName="Genero" />
+                <ScalarProperty Name="IdGrado" ColumnName="IdGrado" />
+                <ScalarProperty Name="Observacion" ColumnName="Observacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Grado">
+            <EntityTypeMapping TypeName="RegistroModel.Grado">
+              <MappingFragment StoreEntitySet="Grado">
+                <ScalarProperty Name="IdGrado" ColumnName="IdGrado" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Materia">
+            <EntityTypeMapping TypeName="RegistroModel.Materia">
+              <MappingFragment StoreEntitySet="Materia">
+                <ScalarProperty Name="IdMateria" ColumnName="IdMateria" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MateriasxGrado">
+            <EntityTypeMapping TypeName="RegistroModel.MateriasxGrado">
+              <MappingFragment StoreEntitySet="MateriasxGrado">
+                <ScalarProperty Name="IdMxG" ColumnName="IdMxG" />
+                <ScalarProperty Name="IdGrado" ColumnName="IdGrado" />
+                <ScalarProperty Name="IdMateria" ColumnName="IdMateria" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

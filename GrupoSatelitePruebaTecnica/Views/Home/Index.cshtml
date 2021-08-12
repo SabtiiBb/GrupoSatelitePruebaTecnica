@@ -1,0 +1,126 @@
+﻿
+@using GrupoSatelitePruebaTecnica.Models;
+@model GrupoSatelitePruebaTecnica.Models.AlumnoVM
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Agregar Alumno", "CrearAlumno")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Codigo de Alumno:
+        </th>
+        <th>
+            Nombre:
+        </th>
+        <th>
+            Grado:
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.ListAlumnos)
+    {
+        <tr id="tr_@item.idAlumno">
+            <td>
+                @Html.DisplayFor(modelItem => item.codAlumno)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NombreGrado)
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "EditarAlumno", new { id = item.idAlumno }, new { @class = "btn btn-success" })
+                <button class="btn btn-info btnDetails" data-codigo="@item.idAlumno" data-target="#staticBackdrop"><i class="fas fa-info"></i>Detalles</button>
+                <button type="button" class="btn btn-danger btnEliminar" data-codigo="@item.idAlumno">Eliminar</button>
+            </td>
+        </tr>
+    }
+
+</table>
+
+<div class="modal fade" id="staticBackdrop" data-url="@Url.Action("GetDetallesEvento", "Evento")" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="true">
+    @{
+        Html.RenderPartial("~/Views/Home/_PartialDetalleAlumno.cshtml", new AlumnoVM());
+    }
+</div>
+
+<input type="hidden" id="urlEliminarAlumno" value="@Url.Action("EliminarAlumno", "Home")" />
+<input type="hidden" id="urlDetailsModal" value="@Url.Action("GetDeatilsModal", "Home")" />
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('.btnEliminar').on('click', function (e) {
+                var idAlumn = $(this).data('codigo');
+                var url = $('#urlEliminarAlumno').val();
+                Swal.fire({
+                    title: "Atencion!",
+                    text: "Este registro sera eliminado y no podra recuperarse!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Si, deseo eliminarlo",
+                    closeOnConfirm: false,
+                    closeOnCancel: true
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            type: "post",
+                            url: url,
+                            dataType: "json",
+                            data: { id: idAlumn },
+                            success: function (res) {
+                                $('#evt_' + idEvento).remove();
+                                Swal.fire({
+                                    title: "EXITO!",
+                                    text: "El Registro se elimino con exito!",
+                                    icon: "success"
+                                })
+                            }, error: function (er) {
+                                Swal.fire({
+                                    title: "Oops!",
+                                    text: "Parece que ha ocurrido un error, intentelo mas tarde!",
+                                    icon: "danger"
+                                })
+                            }
+                        })
+                    }
+                })
+            });
+
+
+            $('.btnDetails').on('click', function (e) {
+                e.preventDefault;
+                var codigo = $(this).data('codigo');
+                var url = $('#urlDetailsModal').val();
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    dataType: "json",
+                    data: { id: codigo },
+                    success: function (res) {
+                        $("#staticBackdrop").html(res.partial);
+                        $('#staticBackdrop').modal("show");
+                    }
+                })
+            })
+
+            $(document).on('click', '.CerrarModal', function (e) {
+                $('#staticBackdrop').modal('hide')
+            })
+            $(document).on('click', '.close', function (e) {
+                $('#staticBackdrop').modal('hide')
+            })
+        })
+    </script>
+}
